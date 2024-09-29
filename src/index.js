@@ -6,19 +6,16 @@ import { openModal, closeModal } from "./components/modal.js";
 // @todo: DOM узлы
 const content = document.querySelector(".content"),
   cardContainer = content.querySelector(".places__list"),
-  forms = document.forms;
-
+  forms = document.forms,
+  popupImage = document.querySelector(".popup_type_image"),
+  imagePopup = popupImage.querySelector(".popup__image"),
+  imageCaption = popupImage.querySelector(".popup__caption");
+  
 // @todo: Функция открытия изображения карточки
-
 const openCard = (cardLink, cardCaption) => {
-  const popupImage = document.querySelector(".popup_type_image"),
-    imagePopup = popupImage.querySelector(".popup__image"),
-    imageCaption = popupImage.querySelector(".popup__caption");
-
   imagePopup.src = cardLink;
   imagePopup.alt = cardCaption;
   imageCaption.textContent = cardCaption;
-
   openModal(popupImage);
 };
 
@@ -96,11 +93,14 @@ formNewCard.addEventListener("submit", (evt) => {
 
 // Обработчики клика закрытия модального по крестику и по оверлею
 
-const popups = document.querySelectorAll('.popup');
+const popups = document.querySelectorAll(".popup");
 popups.forEach((popup) => {
- popup.addEventListener('click', (evt) => {
-  if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close')){
-   closeModal(popup);
-  }
- });
+  popup.addEventListener("click", (evt) => {
+    if (
+      evt.target === evt.currentTarget ||
+      evt.target.classList.contains("popup__close")
+    ) {
+      closeModal(popup);
+    }
+  });
 });
