@@ -1,8 +1,5 @@
 export { enableValidation, clearValidation };
 
-// включение валидации вызовом enableValidation
-// все настройки передаются при вызове
-
 // enableValidation({
 //   formSelector: '.popup__form',
 //   inputSelector: '.popup__input',
@@ -64,13 +61,11 @@ function enableValidation(obj) {
       formElement.querySelectorAll(obj.inputSelector)
     );
     const buttonElement = formElement.querySelector(obj.submitButtonSelector);
-
-    // чтобы проверить состояние кнопки в самом начале
     toggleButtonState(inputList, buttonElement);
     inputList.forEach((inputElement) => {
       inputElement.addEventListener("input", function () {
         checkInputValidity(formElement, inputElement);
-        // чтобы проверять его при изменении любого из полей
+
         toggleButtonState(inputList, buttonElement);
       });
     });

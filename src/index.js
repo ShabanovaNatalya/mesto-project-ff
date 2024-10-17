@@ -117,10 +117,12 @@ formEditProfile.addEventListener("submit", (evt) => {
       profileTitle.textContent = data.name;
       profileDescription.textContent = data.about;
     })
+    .then(() => {
+      closeModal(editProfilePopup);
+    })
     .catch((err) => {
       console.log("Ошибка. Профиль не обновлен.");
     });
-  closeModal(editProfilePopup);
 });
 
 //Смена аватара
@@ -136,12 +138,13 @@ formChangeAvatar.addEventListener("submit", (evt) => {
     .then((data) => {
       profileImage.style.backgroundImage = `url(${data.avatar})`;
     })
+    .then(() => {
+      formChangeAvatar.reset();
+      closeModal(changeAvatarPopup);
+    })
     .catch((err) => {
       console.log("Ошибка. Аватар не обновлен.");
     });
-
-  formChangeAvatar.reset();
-  closeModal(changeAvatarPopup);
 });
 
 // Добавление новой карточки
@@ -160,7 +163,7 @@ formNewCard.addEventListener("submit", (evt) => {
   evt.preventDefault();
   postNewCard(cardName.value, cardUrl.value)
     .then((data) => {
-      cardContainer.append(
+      cardContainer.prepend(
         createCard(
           {
             name: data.name,
@@ -171,14 +174,19 @@ formNewCard.addEventListener("submit", (evt) => {
             deleteCard,
             openCard,
             likeCard,
-          }, idProfile, handleSubmitConfirmPopup)
-      )
+          },
+          idProfile,
+          handleSubmitConfirmPopup
+        )
+      );
+    })
+    .then(() => {
+      closeModal(newCardPopup);
+      formNewCard.reset();
     })
     .catch((err) => {
       console.log("Ошибка. Карточка не добавлена");
     });
-  formNewCard.reset();
-  closeModal(newCardPopup);
 });
 
 //Подтверждение удаления карточки

@@ -64,21 +64,19 @@ const likeCard = (event, idCard, likeCount) => {
     deleteLike(idCard)
       .then((data) => {
         likeCount.textContent = data.likes.length;
+        event.target.classList.remove("card__like-button_is-active");
       })
       .catch((err) => {
         console.log("Ошибка. Лайк не удален");
       });
-
-    event.target.classList.remove("card__like-button_is-active");
   } else {
     likeCardApi(idCard)
       .then((data) => {
         likeCount.textContent = data.likes.length;
+        event.target.classList.add("card__like-button_is-active");
       })
       .catch((err) => {
         console.log("Ошибка. Лайк не поставлен");
       });
-
-    event.target.classList.add("card__like-button_is-active");
   }
 };
