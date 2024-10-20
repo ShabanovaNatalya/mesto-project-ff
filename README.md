@@ -9,5 +9,5 @@
 
 Страница:
 
-https://github.com/ShabanovaNatalya/mesto-project-ff.git
+https://shabanovanatalya.github.io/mesto-project-ff/
 
