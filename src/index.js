@@ -8,11 +8,19 @@ import {
   changeNameJob,
   postNewCard,
   changeAvatarPatch,
-} from "./api.js";
-export { popupDeleteCard };
+  deleteCardApi,
+} from "./components/api.js";
 
-const idProfile = "d1710c2617c8ff04d4d38bba";
-function handleSubmitConfirmPopup() {} //функция удаления нужной карточки
+let idProfile;
+
+//функция удаления нужной карточки
+let handleSubmitConfirmPopup = function () {};
+
+let deleteCardCb = function (a) {
+  handleSubmitConfirmPopup = a;
+};
+
+//Конфигурция валидации
 
 const validationConfig = {
   formSelector: ".popup__form",
@@ -42,14 +50,13 @@ const content = document.querySelector(".page"),
   changeAvatarUrl = formChangeAvatar.querySelector(
     ".popup__input_type_avatar_url"
   ),
+  formChangeAvatarButton = formChangeAvatar.querySelector(".popup__button"),
   profilEditButton = content.querySelector(".profile__edit-button"),
   formEditProfile = forms["edit-profile"],
   nameInput = formEditProfile.querySelector(".popup__input_type_name"),
   jobInput = formEditProfile.querySelector(".popup__input_type_description"),
-  popupDeleteCard = content.querySelector(".popup_type_delete-card"),
-  buttonConfirmationDeleteCard = content.querySelector(
-    ".button_confirmation-delete-card"
-  );
+  formEditProfileButton = formEditProfile.querySelector(".popup__button"),
+  popupDeleteCard = content.querySelector(".popup_type_delete-card");
 
 // @todo: Функция открытия изображения карточки
 const openCard = (cardLink, cardCaption) => {
@@ -65,9 +72,16 @@ function renderProfile(obj) {
   profileTitle.textContent = obj.name;
   profileDescription.textContent = obj.about;
   profileImage.style.backgroundImage = `url(${obj.avatar})`;
+  idProfile = obj._id;
 }
 
 // @todo: Функция вывода все карточки на страницу
+
+const functionCard = {
+  deleteCard,
+  openCard,
+  likeCard,
+};
 
 function renderCards(array) {
   array.forEach((obj) => {
@@ -79,12 +93,10 @@ function renderCards(array) {
           likes: obj.likes,
           id: obj.owner._id,
           idCard: obj._id,
-          deleteCard,
-          openCard,
-          likeCard,
         },
+        functionCard,
         idProfile,
-        handleSubmitConfirmPopup
+        deleteCardCb
       )
     );
   });
@@ -112,6 +124,7 @@ profilEditButton.addEventListener("click", () => {
 
 formEditProfile.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  renderLoading(true, formEditProfileButton);
   changeNameJob(nameInput.value, jobInput.value)
     .then((data) => {
       profileTitle.textContent = data.name;
@@ -122,6 +135,9 @@ formEditProfile.addEventListener("submit", (evt) => {
     })
     .catch((err) => {
       console.log("Ошибка. Профиль не обновлен.");
+    })
+    .finally(() => {
+      renderLoading(false, formEditProfileButton);
     });
 });
 
@@ -129,11 +145,11 @@ formEditProfile.addEventListener("submit", (evt) => {
 
 profileImage.addEventListener("click", () => {
   openModal(changeAvatarPopup);
-  clearValidation(formChangeAvatar, validationConfig);
 });
 
 formChangeAvatar.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  renderLoading(true, formChangeAvatarButton);
   changeAvatarPatch(changeAvatarUrl.value)
     .then((data) => {
       profileImage.style.backgroundImage = `url(${data.avatar})`;
@@ -144,6 +160,9 @@ formChangeAvatar.addEventListener("submit", (evt) => {
     })
     .catch((err) => {
       console.log("Ошибка. Аватар не обновлен.");
+    })
+    .finally(() => {
+      renderLoading(false, formChangeAvatarButton);
     });
 });
 
@@ -152,15 +171,16 @@ formChangeAvatar.addEventListener("submit", (evt) => {
 const newCardPopup = content.querySelector(".popup_type_new-card"),
   formNewCard = forms["new-place"],
   cardName = formNewCard.querySelector(".popup__input_type_card-name"),
-  cardUrl = formNewCard.querySelector(".popup__input_type_url");
+  cardUrl = formNewCard.querySelector(".popup__input_type_url"),
+  formNewCardButton = formNewCard.querySelector(".popup__button");
 
 content.querySelector(".profile__add-button").addEventListener("click", () => {
   openModal(newCardPopup);
-  clearValidation(newCardPopup, validationConfig);
 });
 
 formNewCard.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  renderLoading(true, formNewCardButton);
   postNewCard(cardName.value, cardUrl.value)
     .then((data) => {
       cardContainer.prepend(
@@ -171,12 +191,10 @@ formNewCard.addEventListener("submit", (evt) => {
             likes: data.likes,
             id: data.owner._id,
             idCard: data._id,
-            deleteCard,
-            openCard,
-            likeCard,
           },
+          functionCard,
           idProfile,
-          handleSubmitConfirmPopup
+          deleteCardCb
         )
       );
     })
@@ -186,12 +204,17 @@ formNewCard.addEventListener("submit", (evt) => {
     })
     .catch((err) => {
       console.log("Ошибка. Карточка не добавлена");
+    })
+    .finally(() => {
+      renderLoading(false, formNewCardButton);
     });
 });
 
 //Подтверждение удаления карточки
 
-buttonConfirmationDeleteCard.addEventListener("click", () => {
+const confirmationDeleteCard = forms["delete-card"];
+confirmationDeleteCard.addEventListener("submit", (evt) => {
+  evt.preventDefault();
   handleSubmitConfirmPopup();
   closeModal(popupDeleteCard);
 });
@@ -209,3 +232,13 @@ popups.forEach((popup) => {
     }
   });
 });
+
+//Функция загрузки Сохранение...
+
+function renderLoading(isLoading, buttonElement) {
+  if (isLoading) {
+    buttonElement.textContent = "Сохранение...";
+  } else {
+    buttonElement.textContent = "Сохранить";
+  }
+}

@@ -77,7 +77,7 @@
                 maxlength="40"
                 data-error-message="Вы пропустили это поле"
                 pattern="[a-zA-Zа-яА-ЯЁё\-\s]+$"
-                title="Только латинские и кириллические буквы, знаки дефиса и пробелы"
+                data-error-pattern="Только латинские и кириллические буквы, знаки дефиса и пробелы"
                 required
               />
               <span class="input_name-error popup__error_visible"></span>
@@ -93,7 +93,7 @@
                 maxlength="200"
                 data-error-message="Вы пропустили это поле"
                 pattern="[a-zA-Zа-яА-ЯЁё\-\s]+$"
-                title="Только латинские и кириллические буквы, знаки дефиса и пробелы"
+                data-error-pattern="Только латинские и кириллические буквы, знаки дефиса и пробелы"
                 required
               />
               <span class="input_description-error popup__error_visible"></span>
@@ -120,7 +120,7 @@
                 maxlength="30"
                 data-error-message="Вы пропустили это поле"
                 pattern="[a-zA-Zа-яА-ЯЁё\-\s]+$"
-                title="Только латинские и кириллические буквы, знаки дефиса и пробелы"
+                data-error-pattern="Только латинские и кириллические буквы, знаки дефиса и пробелы"
                 required
               />
               <span class="input_card-name-error popup__error_visible"></span>
@@ -145,11 +145,11 @@
       </div>
       <div class="popup popup_type_delete-card popup_is-animated">
         <div class="popup__content">
-
+          <form class="popup__form-delete-card" name="delete-card">
           <button type="button" class="popup__close"></button>
-          <h3 class="popup__title">Вы уверены?</h3>
+          <h3 class="popup__title popup__title-delete-card">Вы уверены?</h3>
           <button type="submit" class="button popup__button button_confirmation-delete-card">Да</button>
-
+          </form>
         </div>
       </div>
       <div class="popup popup_type_image popup_is-animated">

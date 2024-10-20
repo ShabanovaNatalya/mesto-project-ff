@@ -5,7 +5,7 @@ const openModal = (elem) => {
   elem.classList.add("popup_is-opened");
 
   // обработчик события нажатия Esc
-  document.addEventListener("keydown", closeEsc, { once: true });
+  document.addEventListener("keydown", closeEsc);
 };
 
 // @todo: Функция закрытия модального окна
