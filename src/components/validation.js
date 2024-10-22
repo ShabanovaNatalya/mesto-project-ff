@@ -79,14 +79,6 @@ const checkInputValidity = (
       inputErrorClass,
       errorClass
     );
-  } else if (!inputElement.value) {
-    showInputError(
-      formElement,
-      inputElement,
-      inputElement.dataset.errorMessage,
-      inputErrorClass,
-      errorClass
-    );
   } else {
     hideInputError(formElement, inputElement, inputErrorClass, errorClass);
   }
@@ -129,16 +121,12 @@ function clearValidation(formElement, obj) {
   const inputList = Array.from(
     formElement.querySelectorAll(`.${obj.inputErrorClass}`)
   );
-  const errorList = Array.from(
-    formElement.querySelectorAll(`.${obj.errorClass}_active`)
-  );
-
   const buttonElement = formElement.querySelector(obj.submitButtonSelector);
 
   toggleButtonState(inputList, buttonElement);
 
   inputList.forEach((inputElement) => {
-    checkInputValidity(
+    hideInputError(
       formElement,
       inputElement,
       obj.inputErrorClass,

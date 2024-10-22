@@ -16,8 +16,8 @@ let idProfile;
 //функция удаления нужной карточки
 let handleSubmitConfirmPopup = function () {};
 
-let deleteCardCb = function (a) {
-  handleSubmitConfirmPopup = a;
+let deleteCardCb = function (assignedFunction) {
+  handleSubmitConfirmPopup = assignedFunction;
 };
 
 //Конфигурция валидации
@@ -75,27 +75,24 @@ function renderProfile(obj) {
   idProfile = obj._id;
 }
 
-// @todo: Функция вывода все карточки на страницу
-
+// Все функции арточки
 const functionCard = {
   deleteCard,
   openCard,
   likeCard,
+  deleteCardCb,
 };
 
+// @todo: Функция вывода все карточки на страницу
 function renderCards(array) {
   array.forEach((obj) => {
     cardContainer.append(
       createCard(
-        {
-          name: obj.name,
-          link: obj.link,
-          likes: obj.likes,
-          id: obj.owner._id,
-          idCard: obj._id,
-        },
-        functionCard,
+        obj,
         idProfile,
+        functionCard,
+        openModal,
+        popupDeleteCard,
         deleteCardCb
       )
     );
@@ -129,8 +126,6 @@ formEditProfile.addEventListener("submit", (evt) => {
     .then((data) => {
       profileTitle.textContent = data.name;
       profileDescription.textContent = data.about;
-    })
-    .then(() => {
       closeModal(editProfilePopup);
     })
     .catch((err) => {
@@ -153,8 +148,6 @@ formChangeAvatar.addEventListener("submit", (evt) => {
   changeAvatarPatch(changeAvatarUrl.value)
     .then((data) => {
       profileImage.style.backgroundImage = `url(${data.avatar})`;
-    })
-    .then(() => {
       formChangeAvatar.reset();
       closeModal(changeAvatarPopup);
     })
@@ -185,20 +178,14 @@ formNewCard.addEventListener("submit", (evt) => {
     .then((data) => {
       cardContainer.prepend(
         createCard(
-          {
-            name: data.name,
-            link: data.link,
-            likes: data.likes,
-            id: data.owner._id,
-            idCard: data._id,
-          },
-          functionCard,
+          data,
           idProfile,
+          functionCard,
+          openModal,
+          popupDeleteCard,
           deleteCardCb
         )
       );
-    })
-    .then(() => {
       closeModal(newCardPopup);
       formNewCard.reset();
     })

@@ -8,8 +8,10 @@ const cardTemplate = document.querySelector("#card-template").content;
 
 function createCard(
   cardData,
-  functionCard,
   idProfile,
+  functionCard,
+  openModal,
+  popupDeleteCard,
   deleteCardCb
 ) {
   const newCard = cardTemplate.querySelector(".card").cloneNode(true),
@@ -17,26 +19,26 @@ function createCard(
     cardDeleteButton = newCard.querySelector(".card__delete-button"),
     cardLikeButton = newCard.querySelector(".card__like-button"),
     likeCount = newCard.querySelector(".card__like-count"),
-    idCard = cardData.idCard;
+    idCard = cardData._id;
 
   newCard.querySelector(".card__title").textContent = cardData.name;
   likeCount.textContent = cardData.likes.length;
   cardImage.alt = cardData.name;
   cardImage.src = cardData.link;
 
-  if (cardData.id == idProfile) {
-
+  if (cardData.owner._id == idProfile) {
     function createDeleteCard() {
-        deleteCardApi(idCard);
-        functionCard.deleteCard(newCard);
+      deleteCardApi(idCard)
+      .catch((err) => {
+        console.log("Ошибка. Карточка не удалена");
+      });
+      functionCard.deleteCard(newCard);
     }
 
     cardDeleteButton.addEventListener("click", () => {
       deleteCardCb(createDeleteCard);
 
-      document
-        .querySelector(".popup_type_delete-card")
-        .classList.add("popup_is-opened");
+      openModal(popupDeleteCard);
     });
   } else {
     cardDeleteButton.remove();
@@ -53,7 +55,7 @@ function createCard(
   });
 
   cardLikeButton.addEventListener("click", () => {
-    functionCard.likeCard(event, cardData.idCard, likeCount);
+    functionCard.likeCard(event, cardData._id, likeCount);
   });
 
   return newCard;
