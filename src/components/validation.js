@@ -118,13 +118,7 @@ function enableValidation(obj) {
 // очистка ошибок валидации вызовом clearValidation
 
 function clearValidation(formElement, obj) {
-  const inputList = Array.from(
-    formElement.querySelectorAll(`.${obj.inputErrorClass}`)
-  );
-  const buttonElement = formElement.querySelector(obj.submitButtonSelector);
-
-  toggleButtonState(inputList, buttonElement);
-
+  const inputList = Array.from(formElement.querySelectorAll(obj.inputSelector));
   inputList.forEach((inputElement) => {
     hideInputError(
       formElement,
@@ -133,4 +127,6 @@ function clearValidation(formElement, obj) {
       obj.errorClass
     );
   });
+  const buttonElement = formElement.querySelector(obj.submitButtonSelector);
+  toggleButtonState(inputList, buttonElement);
 }

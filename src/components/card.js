@@ -1,5 +1,5 @@
 export { createCard, deleteCard, likeCard };
-import { likeCardApi, deleteLike, deleteCardApi } from "./api.js";
+import { likeCardApi, deleteLike } from "./api.js";
 
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector("#card-template").content;
@@ -10,9 +10,7 @@ function createCard(
   cardData,
   idProfile,
   functionCard,
-  openModal,
-  popupDeleteCard,
-  deleteCardCb
+  handleClickDelete
 ) {
   const newCard = cardTemplate.querySelector(".card").cloneNode(true),
     cardImage = newCard.querySelector(".card__image"),
@@ -27,18 +25,8 @@ function createCard(
   cardImage.src = cardData.link;
 
   if (cardData.owner._id == idProfile) {
-    function createDeleteCard() {
-      deleteCardApi(idCard)
-      .catch((err) => {
-        console.log("Ошибка. Карточка не удалена");
-      });
-      functionCard.deleteCard(newCard);
-    }
-
     cardDeleteButton.addEventListener("click", () => {
-      deleteCardCb(createDeleteCard);
-
-      openModal(popupDeleteCard);
+      handleClickDelete(idCard, newCard);
     });
   } else {
     cardDeleteButton.remove();
@@ -55,7 +43,7 @@ function createCard(
   });
 
   cardLikeButton.addEventListener("click", () => {
-    functionCard.likeCard(event, cardData._id, likeCount);
+    functionCard.likeCard(event, idCard, likeCount);
   });
 
   return newCard;

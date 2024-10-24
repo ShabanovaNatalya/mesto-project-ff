@@ -65,10 +65,7 @@ export const deleteCardApi = (id) => {
   return fetch(`${config.baseUrl}/cards/${id}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => getResponseData(res))
-  .then((data) => {
-    console.log(data.message);
-  });
+  }).then((res) => getResponseData(res));
 };
 
 // Добавление лайка
